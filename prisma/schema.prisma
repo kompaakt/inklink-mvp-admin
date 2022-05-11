@@ -1,0 +1,163 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedIndexes"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(uuid()) @db.Uuid
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
+  lastLoginAt DateTime? @db.Timestamptz(6)
+  firebaseUid String    @unique
+  signupData  Json?     @db.Json
+  role        Role
+  artist      Artist?
+  avatar String?
+
+  @@map("users")
+}
+
+model Artist {
+  id               String           @id @default(uuid()) @db.Uuid
+  created_at       DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime?        @default(now()) @updatedAt @db.Timestamptz(6)
+  name             String
+  rating           Float?           @default(1)
+  tg               String?
+  userId           String?          @unique @db.Uuid
+  isPublished      Boolean?         @default(false)
+  isOwned          Boolean?         @default(false)
+  ig               String?
+  avatar           String?
+  user             User?            @relation(fields: [userId], references: [id])
+  doneTattoos      DoneTattoo[]
+  priceRange       PriceRange?
+  selectionEntries SelectionEntry[]
+  sketches         Sketch[]
+  locations        Location[]
+  tattooStyles     TattooStyle[]
+
+  @@map("artists")
+}
+
+model DoneTattoo {
+  id               String           @id @default(uuid()) @db.Uuid
+  created_at       DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime?        @default(now()) @updatedAt @db.Timestamptz(6)
+  url              String
+  artistId         String           @db.Uuid
+  artist           Artist           @relation(fields: [artistId], references: [id])
+  selectionEntries SelectionEntry[]
+  tattooStyles     TattooStyle[]
+
+  @@map("done_tattoos")
+}
+
+model Sketch {
+  id               String           @id @default(uuid()) @db.Uuid
+  created_at       DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime?        @default(now()) @updatedAt @db.Timestamptz(6)
+  url              String
+  artistId         String           @db.Uuid
+  artist           Artist           @relation(fields: [artistId], references: [id])
+  selectionEntries SelectionEntry[]
+  tattooStyles     TattooStyle[]
+
+  @@map("sketches")
+}
+
+model Selection {
+  id               String           @id @default(uuid()) @db.Uuid
+  created_at       DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime?        @default(now()) @updatedAt @db.Timestamptz(6)
+  name             String?
+  content          String?
+  position         Int?
+  weight           Float?
+  coverImage       String?
+  abstract         String?
+  coverImageWide   String?
+  featured         Boolean?
+  featuredFrom     DateTime?        @default(now()) @db.Timestamptz(6)
+  featuredTo       DateTime?        @default(now()) @db.Timestamptz(6)
+  selectionEntries SelectionEntry[]
+  locations        Location[]
+
+  @@map("selections")
+}
+
+model SelectionEntry {
+  id            String       @id @default(uuid()) @db.Uuid
+  created_at    DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime?    @updatedAt
+  selectionId   String       @db.Uuid
+  description   String?
+  position      Int
+  artistId      String?      @db.Uuid
+  doneTattooId  String?      @db.Uuid
+  sketchId      String?      @db.Uuid
+  tattooStyleId String?      @db.Uuid
+  studioId      String?      @db.Uuid
+  artist        Artist?      @relation(fields: [artistId], references: [id])
+  doneTattoo    DoneTattoo?  @relation(fields: [doneTattooId], references: [id])
+  selection     Selection    @relation(fields: [selectionId], references: [id])
+  sketch        Sketch?      @relation(fields: [sketchId], references: [id])
+  tattooStyle   TattooStyle? @relation(fields: [tattooStyleId], references: [id])
+
+  @@map("selection_entries")
+}
+
+model TattooStyle {
+  id               String           @id @default(uuid()) @db.Uuid
+  created_at       DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime?        @default(now()) @updatedAt @db.Timestamptz(6)
+  name             String?
+  selectionEntries SelectionEntry[]
+  artists          Artist[]
+  doneTattoos      DoneTattoo[]
+  sketches         Sketch[]
+
+  @@map("tattoo_styles")
+}
+
+model PriceRange {
+  id           String    @id @default(uuid()) @db.Uuid
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime? @updatedAt
+  artistId     String    @unique @db.Uuid
+  rangeStart   Int
+  rangeEnd     Int?
+  relativeCost Float?
+  currency     String
+  artist       Artist    @relation(fields: [artistId], references: [id])
+
+  @@map("price_ranges")
+}
+
+model Location {
+  id         String      @id @default(uuid()) @db.Uuid
+  created_at DateTime?   @default(now()) @db.Timestamptz(6)
+  updated_at DateTime?   @updatedAt
+  name       String
+  country    String?
+  postalCode String?
+  city       String?
+  long       Float
+  lat        Float
+  artists    Artist[]
+  selections Selection[]
+
+  @@map("locations")
+}
+
+enum Role {
+  ARTIST
+  ADMIN
+  MODERATOR
+  CONTENT_CREATOR
+}

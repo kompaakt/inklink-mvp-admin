@@ -1,0 +1,21 @@
+{
+  "name": "my-prisma-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "prisma": "^3.13.0"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.6.1",
+    "@heroicons/react": "^1.0.6",
+    "@prisma/client": "^3.13.0",
+    "react-router-dom": "^6.3.0"
+  }
+}
