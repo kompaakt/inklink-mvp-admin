@@ -18,12 +18,16 @@ const app = express();
 app.post("/upload", multer({ storage: multer.memoryStorage() }).single("file"), async function (request, response) {
   const id = uuidv4()
   try {
-    const resultMinioPut = await minio.putObject(BUCKET, id, request.file.buffer, {
+    await minio.putObject(BUCKET, id, request.file.buffer, {
       fieldName: request.file.fieldname,
       "content-type": request.file.mimetype,
       "Mimetype": request.file.mimetype, "Cache-Control": "max-age=86400"
     });
-    response.send({ success: request.file.fieldname });
+    response.send({
+      success: {
+        id
+      }
+    });
   }
   catch (error) {
     response.status(500).send({
