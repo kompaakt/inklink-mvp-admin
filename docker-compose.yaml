@@ -38,9 +38,9 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
-    expose:
-      - ${MINIO_PORT}
-      - "9001"
+    ports:
+      - "${MINIO_PORT}:${MINIO_PORT}"
+      - "9001:9001"
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
@@ -70,7 +70,7 @@ services:
       - .:/usr/src/app/upload-file
     container_name: upload-file
     expose:
-      - '3333'
+      - '3000'
     env_file: .env
 
   nginx-proxy:
