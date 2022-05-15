@@ -28,7 +28,7 @@ app.post("/upload", multer({storage: multer.memoryStorage()}).single("file"), fu
             error
           });
         }
-        response.send(request.file.filename);
+        response.send(request.file);
   });
 });
 
