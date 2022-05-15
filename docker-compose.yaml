@@ -76,6 +76,8 @@ services:
   nginx-proxy:
     build: ./proxy
     container_name: nginx-proxy
+    volumes: 
+      - ./proxy/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "80:80"
   
