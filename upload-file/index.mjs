@@ -11,7 +11,7 @@ const minio = new Minio.Client({
   secretKey: process.env.MINIO_PASSWORD
 });
 
-console.log(process.env)
+console.log("env:", process.env)
 
 const app = express();
 
