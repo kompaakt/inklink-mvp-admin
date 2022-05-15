@@ -12,10 +12,11 @@ const minio = new Minio.Client({
 });
 
 const BUCKET = 'image'
+const MAX_FILE_SIZE = 15 * 1024 * 1024
 
 const app = express();
 
-app.post("/upload", multer({ storage: multer.memoryStorage() }).single("file"), async function (request, response) {
+app.post("/upload", multer({ storage: multer.memoryStorage(), limits: { fileSize: MAX_FILE_SIZE } }).single("file"), async function (request, response) {
   const id = uuidv4()
   try {
     await minio.putObject(BUCKET, id, request.file.buffer, {
@@ -34,8 +35,6 @@ app.post("/upload", multer({ storage: multer.memoryStorage() }).single("file"), 
       error
     });
   }
-
-
 });
 
 
