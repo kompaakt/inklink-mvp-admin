@@ -41,6 +41,7 @@ services:
     ports:
       - ${MINIO_PORT}:${MINIO_PORT}
       - "9001:9001"
+    restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s

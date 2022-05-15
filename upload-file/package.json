@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.mjs",
   "scripts": {
-    "pm2": "pm2 start index.mjs"
+    "start": "node index.mjs"
   },
   "keywords": [],
   "author": "",
