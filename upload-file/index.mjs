@@ -11,7 +11,7 @@ const minio = new Minio.Client({
   secretKey: process.env.MINIO_PASSWORD
 });
 
-console.log("env:", process.env)
+const BUCKET = 'image'
 
 const app = express();
 
