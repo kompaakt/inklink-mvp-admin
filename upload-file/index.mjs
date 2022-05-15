@@ -8,7 +8,7 @@ console.log(process.env)
 
 const minio = new Minio.Client({
   endPoint: process.env.HOST,
-  port: process.env.MINIO_PORT,
+  port: parseInt(process.env.MINIO_PORT, 10),
   useSSL: false,
   accessKey: process.env.MINIO_USER,
   secretKey: process.env.MINIO_PASSWORD
