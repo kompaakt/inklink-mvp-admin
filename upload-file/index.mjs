@@ -3,9 +3,6 @@ import multer from "multer";
 import Minio from 'minio'
 import { v4 as uuidv4 } from 'uuid'
 
-console.log(process.env)
-
-
 const minio = new Minio.Client({
   endPoint: process.env.HOST,
   port: parseInt(process.env.MINIO_PORT, 10),

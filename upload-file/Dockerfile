@@ -1,13 +1,13 @@
 
 FROM node:slim
-RUN mkdir -p /opt/app
-WORKDIR /opt/app
-COPY ./ .
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY . .
 ENV MINIO_USER=${MINIO_USER}
 ENV MINIO_PASSWORD=${MINIO_PASSWORD}
 ENV MINIO_PORT=${MINIO_PORT}
 ENV HOST=${MINIO_HOST}
 
-RUN npm install
 EXPOSE 3000
 CMD [ "node", "index.mjs" ]

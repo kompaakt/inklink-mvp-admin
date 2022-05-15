@@ -61,3 +61,11 @@ services:
     build:
       context: ./upload-file
       dockerfile: ./upload-file/Dockerfile
+    volumes:
+      - .:/usr/src/app
+    container_name: upload-file
+    restart: always
+    ports:
+      - 3333:3000
+    command: node index.mjs
+    env_file: .env
