@@ -1,0 +1,73 @@
+table:
+  schema: public
+  name: selection_entries
+object_relationships:
+  - name: artist
+    using:
+      foreign_key_constraint_on: artistId
+  - name: done_tattoo
+    using:
+      foreign_key_constraint_on: doneTattooId
+  - name: selection
+    using:
+      foreign_key_constraint_on: selectionId
+  - name: sketch
+    using:
+      foreign_key_constraint_on: sketchId
+  - name: tattoo_style
+    using:
+      foreign_key_constraint_on: tattooStyleId
+insert_permissions:
+  - role: content_creator
+    permission:
+      check: {}
+      columns:
+        - position
+        - description
+        - updated_at
+        - created_at
+        - artistId
+        - doneTattooId
+        - id
+        - selectionId
+        - sketchId
+        - studioId
+        - tattooStyleId
+      backend_only: false
+select_permissions:
+  - role: content_creator
+    permission:
+      columns:
+        - position
+        - description
+        - updated_at
+        - created_at
+        - artistId
+        - doneTattooId
+        - id
+        - selectionId
+        - sketchId
+        - studioId
+        - tattooStyleId
+      filter: {}
+update_permissions:
+  - role: content_creator
+    permission:
+      columns:
+        - position
+        - description
+        - updated_at
+        - created_at
+        - artistId
+        - doneTattooId
+        - id
+        - selectionId
+        - sketchId
+        - studioId
+        - tattooStyleId
+      filter: {}
+      check: null
+delete_permissions:
+  - role: content_creator
+    permission:
+      filter: {}

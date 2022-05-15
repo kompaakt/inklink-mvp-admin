@@ -1,0 +1,129 @@
+table:
+  schema: public
+  name: artists
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: userId
+array_relationships:
+  - name: _ArtistToLocations
+    using:
+      foreign_key_constraint_on:
+        column: A
+        table:
+          schema: public
+          name: _ArtistToLocation
+  - name: _ArtistToTattooStyles
+    using:
+      foreign_key_constraint_on:
+        column: A
+        table:
+          schema: public
+          name: _ArtistToTattooStyle
+  - name: done_tattoos
+    using:
+      foreign_key_constraint_on:
+        column: artistId
+        table:
+          schema: public
+          name: done_tattoos
+  - name: price_ranges
+    using:
+      foreign_key_constraint_on:
+        column: artistId
+        table:
+          schema: public
+          name: price_ranges
+  - name: selection_entries
+    using:
+      foreign_key_constraint_on:
+        column: artistId
+        table:
+          schema: public
+          name: selection_entries
+  - name: sketches
+    using:
+      foreign_key_constraint_on:
+        column: artistId
+        table:
+          schema: public
+          name: sketches
+computed_fields:
+  - name: avatar_url_text
+    definition:
+      function:
+        schema: public
+        name: avatar_url
+insert_permissions:
+  - role: content_creator
+    permission:
+      check: {}
+      columns:
+        - isOwned
+        - isPublished
+        - rating
+        - avatar
+        - description
+        - ig
+        - name
+        - tg
+        - created_at
+        - updated_at
+        - machineType
+        - id
+        - userId
+      backend_only: false
+select_permissions:
+  - role: artist
+    permission:
+      columns:
+        - avatar
+        - created_at
+        - description
+        - id
+        - ig
+        - machineType
+        - name
+        - rating
+        - tg
+      filter: {}
+  - role: content_creator
+    permission:
+      columns:
+        - isOwned
+        - isPublished
+        - rating
+        - avatar
+        - description
+        - ig
+        - name
+        - tg
+        - created_at
+        - updated_at
+        - machineType
+        - id
+        - userId
+      filter: {}
+update_permissions:
+  - role: content_creator
+    permission:
+      columns:
+        - isOwned
+        - isPublished
+        - rating
+        - avatar
+        - description
+        - ig
+        - name
+        - tg
+        - created_at
+        - updated_at
+        - machineType
+        - id
+        - userId
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: content_creator
+    permission:
+      filter: {}

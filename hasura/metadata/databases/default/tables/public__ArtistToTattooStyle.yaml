@@ -1,0 +1,10 @@
+table:
+  schema: public
+  name: _ArtistToTattooStyle
+object_relationships:
+  - name: artist
+    using:
+      foreign_key_constraint_on: A
+  - name: tattoo_style
+    using:
+      foreign_key_constraint_on: B

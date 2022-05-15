@@ -1,0 +1,7 @@
+table:
+  schema: public
+  name: price_ranges
+object_relationships:
+  - name: artist
+    using:
+      foreign_key_constraint_on: artistId

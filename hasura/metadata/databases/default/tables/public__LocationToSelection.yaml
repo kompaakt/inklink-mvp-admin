@@ -1,0 +1,10 @@
+table:
+  schema: public
+  name: _LocationToSelection
+object_relationships:
+  - name: location
+    using:
+      foreign_key_constraint_on: A
+  - name: selection
+    using:
+      foreign_key_constraint_on: B

@@ -1,0 +1,49 @@
+table:
+  schema: storage
+  name: buckets
+configuration:
+  custom_root_fields:
+    insert: insertBuckets
+    select_aggregate: bucketsAggregate
+    insert_one: insertBucket
+    select_by_pk: bucket
+    select: buckets
+    delete: deleteBuckets
+    update: updateBuckets
+    delete_by_pk: deleteBucket
+    update_by_pk: updateBucket
+  custom_name: buckets
+  column_config:
+    min_upload_file_size:
+      custom_name: minUploadFileSize
+    download_expiration:
+      custom_name: downloadExpiration
+    presigned_urls_enabled:
+      custom_name: presignedUrlsEnabled
+    cache_control:
+      custom_name: cacheControl
+    updated_at:
+      custom_name: updatedAt
+    created_at:
+      custom_name: createdAt
+    id:
+      custom_name: id
+    max_upload_file_size:
+      custom_name: maxUploadFileSize
+  custom_column_names:
+    min_upload_file_size: minUploadFileSize
+    download_expiration: downloadExpiration
+    presigned_urls_enabled: presignedUrlsEnabled
+    cache_control: cacheControl
+    updated_at: updatedAt
+    created_at: createdAt
+    id: id
+    max_upload_file_size: maxUploadFileSize
+array_relationships:
+  - name: files
+    using:
+      foreign_key_constraint_on:
+        column: bucket_id
+        table:
+          schema: storage
+          name: files

@@ -1,0 +1,6 @@
+version: 3
+endpoint: http://65.108.254.138:8080
+metadata_directory: metadata
+actions:
+  kind: synchronous
+  handler_webhook_baseurl: http://65.108.254.138:3000

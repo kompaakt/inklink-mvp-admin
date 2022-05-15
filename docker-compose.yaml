@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   postgres:
-    image: postgres
+    image: postgis/postgis:latest
     restart: always
     volumes:
       - ./data/db:/var/lib/postgresql/data
@@ -24,7 +24,7 @@ services:
         "type":"RS256",
         "jwk_url": "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
         "audience": "${PROJECT_ID}",
-        "issuer": "https://securetoken.google.com/inklink-de66a"
+        "issuer": "https://securetoken.google.com/${PROJECT_ID}"
       }'
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
@@ -38,9 +38,9 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
-    ports:
-      - ${MINIO_PORT}:${MINIO_PORT}
-      - "9001:9001"
+    expose:
+      - ${MINIO_PORT}
+      - "9001"
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
@@ -48,21 +48,29 @@ services:
       timeout: 20s
       retries: 3
     volumes:
-        - /mnt/HC_Volume_19420880/cdn:/data
+        - /mnt/HC_Volume_19420880/minio:/data
         
   imageproxy:
+    depends_on:
+      - "minio"
+      - "graphql-engine"
     image: 'willnorris/imageproxy:latest'
-    entrypoint: /app/imageproxy -addr 0.0.0.0:8080 -cache /tmp/cache -verbose
+    entrypoint: /app/imageproxy -addr 0.0.0.0:8081 -cache /tmp/cache -verbose
     ports:
-      - '9002:8080'
+      - '8081'
     volumes:
       - /tmp:/tmp/cache
 
   file-upload:
+    depends_on:
+      - "minio"
+      - "graphql-engine"
     build: ./upload-file
     volumes:
       - .:/usr/src/app/upload-file
     container_name: upload-file
-    ports:
-      - 3333:3000
+    expose:
+      - '3333'
     env_file: .env
+
+  

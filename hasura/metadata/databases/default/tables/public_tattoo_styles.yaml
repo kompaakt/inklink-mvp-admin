@@ -1,0 +1,65 @@
+table:
+  schema: public
+  name: tattoo_styles
+array_relationships:
+  - name: _ArtistToTattooStyles
+    using:
+      foreign_key_constraint_on:
+        column: B
+        table:
+          schema: public
+          name: _ArtistToTattooStyle
+  - name: _DoneTattooToTattooStyles
+    using:
+      foreign_key_constraint_on:
+        column: B
+        table:
+          schema: public
+          name: _DoneTattooToTattooStyle
+  - name: _SketchToTattooStyles
+    using:
+      foreign_key_constraint_on:
+        column: B
+        table:
+          schema: public
+          name: _SketchToTattooStyle
+  - name: selection_entries
+    using:
+      foreign_key_constraint_on:
+        column: tattooStyleId
+        table:
+          schema: public
+          name: selection_entries
+insert_permissions:
+  - role: content_creator
+    permission:
+      check: {}
+      columns:
+        - name
+        - created_at
+        - updated_at
+        - id
+      backend_only: false
+select_permissions:
+  - role: content_creator
+    permission:
+      columns:
+        - name
+        - created_at
+        - updated_at
+        - id
+      filter: {}
+update_permissions:
+  - role: content_creator
+    permission:
+      columns:
+        - name
+        - created_at
+        - updated_at
+        - id
+      filter: {}
+      check: null
+delete_permissions:
+  - role: content_creator
+    permission:
+      filter: {}

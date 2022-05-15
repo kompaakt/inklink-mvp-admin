@@ -1,0 +1,57 @@
+table:
+  schema: public
+  name: locations
+array_relationships:
+  - name: _ArtistToLocations
+    using:
+      foreign_key_constraint_on:
+        column: B
+        table:
+          schema: public
+          name: _ArtistToLocation
+  - name: _LocationToSelections
+    using:
+      foreign_key_constraint_on:
+        column: A
+        table:
+          schema: public
+          name: _LocationToSelection
+insert_permissions:
+  - role: content_creator
+    permission:
+      check: {}
+      columns: []
+      backend_only: false
+select_permissions:
+  - role: content_creator
+    permission:
+      columns:
+        - lat
+        - long
+        - city
+        - country
+        - name
+        - postalCode
+        - updated_at
+        - created_at
+        - id
+      filter: {}
+update_permissions:
+  - role: content_creator
+    permission:
+      columns:
+        - lat
+        - long
+        - city
+        - country
+        - name
+        - postalCode
+        - updated_at
+        - created_at
+        - id
+      filter: {}
+      check: null
+delete_permissions:
+  - role: content_creator
+    permission:
+      filter: {}
