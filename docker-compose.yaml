@@ -16,8 +16,8 @@ services:
     depends_on:
       - 'postgres'
     restart: always
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
       HASURA_GRAPHQL_JWT_SECRET: '{
@@ -56,7 +56,7 @@ services:
       - "graphql-engine"
     image: 'willnorris/imageproxy:latest'
     entrypoint: /app/imageproxy -addr 0.0.0.0:8081 -cache /tmp/cache -verbose
-    ports:
+    expose:
       - '8081'
     volumes:
       - /tmp:/tmp/cache
@@ -73,4 +73,9 @@ services:
       - '3333'
     env_file: .env
 
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    ports:
+      "80:80"
   
