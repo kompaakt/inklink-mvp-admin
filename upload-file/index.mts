@@ -36,6 +36,7 @@ app.post("/upload", multer({ storage: multer.memoryStorage(), limits: { fileSize
           id
           minio_id
         }
+      }
       `,
       {
         minio_id: id
