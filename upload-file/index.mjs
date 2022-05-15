@@ -15,6 +15,7 @@ const app = express();
 
 app.post("/upload", multer({storage: multer.memoryStorage()}).single("file"), function(request, response) {
   const id = uuidv4()
+  console.log('run upload')
   minio.putObject(BUCKET, id, request.file.buffer, {
     fieldName: request.file.fieldname,
     "content-type": request.file.mimetype,
