@@ -15,8 +15,8 @@ const cors = require("cors")({
 		);
 	},
 });
-const {v4: uuidv4} = require("uuid")
-const {hasuraClient} = require("./hasura_client");
+const { v4: uuidv4 } = require("uuid")
+const { hasuraClient } = require("./hasura_client");
 
 const Firestore = require("@google-cloud/firestore");
 admin.initializeApp(functions.config().firebase);
@@ -76,7 +76,7 @@ exports.processSignUp = functions.auth.user().onCreate(async (user) => {
 		throw new Error('error creating hasura user')
 	}
 
-	return {...hasuraUserCreateResult?.insert_users_one}
+	return { ...hasuraUserCreateResult?.insert_users_one }
 });
 
 exports.refreshToken = functions.https.onRequest((req, res) => {
@@ -93,3 +93,4 @@ exports.refreshToken = functions.https.onRequest((req, res) => {
 			});
 	});
 });
+
