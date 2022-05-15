@@ -10,4 +10,4 @@ ENV MINIO_PORT=${MINIO_PORT}
 ENV HOST=${MINIO_HOST}
 
 EXPOSE 3000
-CMD [ "node", "index.mjs" ]
+CMD [ "npm", "start" ]
