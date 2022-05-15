@@ -34,7 +34,9 @@ export const ArtistsList = ({ query: _query }) => {
     },
   });
 
-  if (error) return <>error</>;
+  if (error) {
+    return null;
+  }
 
   return (
     <div className="">

@@ -1,53 +1,56 @@
 import React, { useContext } from 'react';
-import { BrowserRouter as Router, useRoutes, Route, Navigate } from 'react-router-dom';
-import { SignUp } from './SignUp';
+import {
+  BrowserRouter as Router,
+  useRoutes,
+  Route,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import { Layout } from './layout';
 import { ArtistsList } from './pages/artist/list';
 import { ArtistEdit } from './pages/artist/edit';
-import { AuthContext } from './context/AuthProvider';
+import { ArtistSignUp } from './pages/artistSignUp';
+import { SignUp } from './pages/signUp';
+import { AuthContext, AuthProvider } from './context/AuthProvider';
 
 const Routes = () => {
   return useRoutes([
+    // { path: 'signup', element: <SignUp /> },
     { path: '/', element: <ArtistsList /> },
     { path: 'artists', element: <ArtistsList /> },
     { path: 'artists/:artistId', element: <ArtistEdit /> },
     { path: 'artists/create', element: <ArtistEdit create={true} /> },
+    { path: '/welcome', element: <ArtistSignUp /> },
   ]);
 };
 
 const ProtectedRoute = ({ userInfo, redirectPath = '/signup', children }) => {
-  console.log({ userInfo, redirectPath });
-  if (!userInfo) {
-    console.log('navigate');
-    return <Navigate to={redirectPath} replace />;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  if (location.pathname !== '/signup') {
+    navigate('/signup');
   }
   return children;
 };
 
 function App() {
-  const { userInfo, isUserInfoLoading } = useContext(AuthContext);
+  const { userInfo } = useContext(AuthContext);
 
-  if (!userInfo && !isUserInfoLoading) {
+  console.log('userInfo', userInfo);
+
+  if (window.location.pathname === '/signup' && !userInfo) {
     return <SignUp />;
   }
 
+  if (window.location.pathname === '/welcome') {
+    return <ArtistSignUp />;
+  }
+
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path="signup" element={<SignUp />} />
-          <Route path="*" element={<SignUp />} />
-          <Route
-            path="artists"
-            element={
-              <ProtectedRoute userInfo={userInfo}>
-                <ArtistsList />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Layout>
-    </Router>
+    <Layout>
+      <Routes />
+    </Layout>
   );
 }
 

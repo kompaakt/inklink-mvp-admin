@@ -4,10 +4,7 @@ import { MenuAlt2Icon, XIcon } from '@heroicons/react/outline';
 import { Dialog, Transition } from '@headlessui/react';
 import { sidebarItems } from '../routes';
 import Logo from '../assets/logo.svg';
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
+import { classNames } from '../utils';
 
 export const Sidebar = ({ sidebarOpen, closeSidebar }) => {
   const [sidebarRoutes, setSidebarRoutes] = useState(sidebarItems);

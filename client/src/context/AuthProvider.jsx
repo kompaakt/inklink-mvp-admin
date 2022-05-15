@@ -1,13 +1,17 @@
 import React, { createContext, useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import firebase from 'firebase/compat/app';
 import { gql } from '@apollo/client';
 import { apolloClient } from '../apolloClient';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useLocalStorage('userInfo', null);
   const [isUserInfoLoading, setIsUserInfoLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (userInfo) {
@@ -15,22 +19,30 @@ export const AuthProvider = ({ children }) => {
     }
 
     firebase.auth().onAuthStateChanged((firebaseUser) => {
+      console.log({ firebaseUser });
       if (firebaseUser) {
-        return refreshToken({ firebaseUser }).then(() => {
+        console.log('refreshToken');
+        return refreshToken({ firebaseUser }).then((r) => {
+          console.log(r, 'loadUserInfo');
+
           return loadUserInfo({ uid: firebaseUser.uid })
             .then(setUserInfo)
             .then(() => {
               setIsUserInfoLoading(false);
+              if (window.location.pathname === '/signup') {
+                navigate('/');
+              }
             });
         });
       } else {
         setUserInfo(null);
         setIsUserInfoLoading(false);
+        if (window.location.pathname !== '/signup') {
+          navigate('/signup');
+        }
       }
     });
   }, []);
-
-  console.log('render');
 
   return (
     <AuthContext.Provider value={{ userInfo, isUserInfoLoading }}>{children}</AuthContext.Provider>
@@ -74,6 +86,7 @@ const refreshToken = ({ firebaseUser }) => {
           }
           const endpoint = 'https://us-central1-inklink-de66a.cloudfunctions.net/refreshToken';
           return fetch(`${endpoint}?uid=${firebaseUser.uid}`).then((res) => {
+            console.log('fetch refresh', res);
             if (res.status === 200) {
               return firebaseUser.getIdToken(true);
             }
@@ -81,9 +94,11 @@ const refreshToken = ({ firebaseUser }) => {
               throw e;
             });
           });
-        }),
+        })
+        .catch(console.error),
     )
     .then((validToken) => {
+      localStorage.setItem('token', validToken);
       window.token = validToken;
     })
     .catch(console.error);

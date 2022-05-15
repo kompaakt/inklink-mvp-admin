@@ -1,0 +1,63 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+      - ./initdb.d:/docker-entrypoint-initdb.d:ro
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
+
+  graphql-engine:
+    image: hasura/graphql-engine:latest
+    depends_on:
+      - 'postgres'
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
+      HASURA_GRAPHQL_JWT_SECRET: '{
+        "type":"RS256",
+        "jwk_url": "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
+        "audience": "${PROJECT_ID}",
+        "issuer": "https://securetoken.google.com/inklink-de66a"
+      }'
+      HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: public
+      HASURA_GRAPHQL_LOG_LEVEL: debug
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
+
+  minio:
+    image: minio/minio:latest
+    entrypoint: sh
+    command: -c '/opt/bin/minio server --console-address ":9001" --address :8484 /data'
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+    ports:
+      - ${MINIO_PORT}:${MINIO_PORT}
+      - "9001:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    volumes:
+        - /mnt/HC_Volume_19420880/cdn:/data
+        
+  imageproxy:
+    image: 'willnorris/imageproxy:latest'
+    entrypoint: /app/imageproxy -addr 0.0.0.0:8080 -cache /tmp/cache -verbose
+    ports:
+      - '9002:8080'
+    volumes:
+      - /tmp:/tmp/cache
+
+  file-upload:
+    build:
+      context: ./upload-file
+      dockerfile: ./upload-file/Dockerfile

@@ -16,8 +16,8 @@ model User {
   firebaseUid String    @unique
   signupData  Json?     @db.Json
   role        Role
+  avatar      String?
   artist      Artist?
-  avatar String?
 
   @@map("users")
 }
@@ -34,6 +34,8 @@ model Artist {
   isOwned          Boolean?         @default(false)
   ig               String?
   avatar           String?
+  description      String?
+  machineType      MachineType      @default(MACHINE)
   user             User?            @relation(fields: [userId], references: [id])
   doneTattoos      DoneTattoo[]
   priceRange       PriceRange?
@@ -153,6 +155,12 @@ model Location {
   selections Selection[]
 
   @@map("locations")
+}
+
+enum MachineType {
+  MACHINE
+  HANDPOKE
+  MACHINE_HANDPOKE
 }
 
 enum Role {
