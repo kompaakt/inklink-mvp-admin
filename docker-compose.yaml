@@ -60,7 +60,7 @@ services:
   file-upload:
     build:
       context: ./upload-file
-      dockerfile: ./upload-file/Dockerfile
+      dockerfile: ./Dockerfile
     volumes:
       - .:/usr/src/app
     container_name: upload-file
