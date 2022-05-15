@@ -11,6 +11,8 @@ const minio = new Minio.Client({
   secretKey: process.env.MINIO_PASSWORD
 });
 
+console.log(process.env)
+
 const app = express();
 
 app.post("/upload", multer({storage: multer.memoryStorage()}).single("file"), function(request, response) {
